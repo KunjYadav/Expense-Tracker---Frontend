@@ -145,3 +145,40 @@ displayContainer.addEventListener('click', (e) => {
             .catch(err => { console.log(err) })
     }
 })
+
+//download Expense
+const downloadBtn = document.getElementById('download')
+downloadBtn.addEventListener('click', () => {
+    axios.get('http://localhost:3000/download', { headers: { 'authorization': `Bearer ${localStorage.getItem('token')}` } })
+        .then(response => {
+            var link = document.createElement('link');
+            link.href = response.data.fileUrl;
+            link.download = 'MyExpenses.csv'
+            link.click();
+        })
+        .catch((err) => {
+            console.log(err)
+            document.innerHTML += `<div>${err}</div>`
+        })
+})
+
+document.addEventListener('DOMContentLoaded', () => {
+    const previousDownloadDiv = document.getElementById('previousDownload')
+    axios.get('http://localhost:3000/previousdownloads', { headers: { 'authorization': `Bearer ${localStorage.getItem('token')}` } })
+        .then(response => {
+            previousDownloadDiv.innerHTML = '';
+            let heading = document.createElement('h2');
+            heading.innerHTML = 'Previous Downloads'
+            previousDownloadDiv.appendChild(heading)
+            const ul = document.createElement('ul')
+            response.data.links.reverse().forEach(link => {
+                const li = document.createElement('li')
+                li.innerHTML = `<a href="${link.link}">${link.fileName}</a>`
+                ul.appendChild(li)
+            })
+            previousDownloadDiv.appendChild(ul)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})

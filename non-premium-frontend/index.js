@@ -122,6 +122,11 @@ logout.addEventListener('click', () => {
     localStorage.removeItem('token')
 })
 
+//Download
+document.getElementById('download').addEventListener('click', () => {
+    notifyUser('Buy Premium to download all your expenses')
+})
+
 
 //delete expense
 const displayContainer = document.getElementById('displayContainer')
